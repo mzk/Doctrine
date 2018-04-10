@@ -403,7 +403,7 @@ class OrmExtension extends Nette\DI\CompilerExtension
 
 		$builder->addDefinition($this->prefix($name . '.schemaManager'))
 			->setClass(AbstractSchemaManager::class)
-			->setFactory('@' . Kdyby\Doctrine\Connection::class . '::getSchemaManager')
+			->setFactory('@' . Doctrine\DBAL\Connection::class . '::getSchemaManager')
 			->setAutowired($isDefault);
 
 		foreach ($this->compiler->getExtensions(AnnotationsExtension::class) as $extension) {
@@ -527,14 +527,14 @@ class OrmExtension extends Nette\DI\CompilerExtension
 		// connection
 		$options = array_diff_key($config, array_flip(['types', 'resultCache', 'connection', 'logging']));
 		$connection = $builder->addDefinition($connectionServiceId = $this->prefix($name . '.connection'))
-			->setClass(Kdyby\Doctrine\Connection::class)
+			->setClass(Doctrine\DBAL\Connection::class)
 			->setFactory(Kdyby\Doctrine\Connection::class . '::create', [
 				$options,
 				$this->prefix('@' . $name . '.dbalConfiguration'),
 				$this->prefix('@' . $name . '.evm'),
 			])
-			->addSetup('setSchemaTypes', [$schemaTypes])
-			->addSetup('setDbalTypes', [$dbalTypes])
+//			->addSetup('setSchemaTypes', [$schemaTypes])
+//			->addSetup('setDbalTypes', [$dbalTypes])
 			->addTag(self::TAG_CONNECTION)
 			->addTag('kdyby.doctrine.connection')
 			->setAutowired($isDefault);
